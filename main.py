@@ -1,29 +1,59 @@
-with open("books/frankenstein.txt") as f:
-    text = f.read()
-    words = text.split()
+book_path = "books/frankenstein.txt"
 
-def count_words(words):
+
+def main():
+    text = get_book_text(book_path)
+    #print(text)
+    num_words = get_num_words(text)
+    #print(num_words)
+    chars_dict = get_chars_dict(text)
+    #print(chars_dict)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+    #print(chars_sorted_list)
+
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{num_words} words found in the document")
+    print()
+
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"The '{item['char']}' character was found {item['num']} times")
+
+    print("--- End report ---")
+
+
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
+    
+def get_num_words(text):
+    words = text.split()
     return len(words)
 
-def count_letters(text):
-    letters = {}
-    for l in text:
-        lowercase = l.lower()
-        if lowercase in letters:
-            letters[lowercase] += 1
+def get_chars_dict(text):
+    chars = {}
+    for c in text:
+        lowered = c.lower()
+        if lowered in chars:
+            chars[lowered] += 1
         else:
-            letters[lowercase] = 1
-    return letters
+            chars[lowered] = 1
+    return chars
 
-count_words(words)
+def sort_on(d):
+    return d["num"]
 
-input_dictionary = count_letters(text)
-result_list = list(input_dictionary.items())
-#print(result_list)
-result_list.sort()
-print(result_list)
-for item in result_list:
-    print(item[0])
-    if item[0].isalpha() == False:
-        result_list.remove(item)
-print(result_list)
+def chars_dict_to_sorted_list(num_chars_dict):
+    sorted_list = []
+    for ch in num_chars_dict:
+        sorted_list.append({"char": ch, "num": num_chars_dict[ch]})
+    sorted_list.sort(reverse=True, key=sort_on)
+    return sorted_list
+
+def get_character_sums(text):
+    words = text.split()
+    return len(words)
+
+
+main()
